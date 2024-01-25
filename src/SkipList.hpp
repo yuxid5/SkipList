@@ -274,7 +274,7 @@ const K& SkipList<K, V>::previousKey(const K& key) const {
 }
 
 template <typename K, typename V>
-const V& SkipList<K, V>::find(K key) const {
+const V& SkipList<K, V>::find(const K& key) const {
     // TODO - your implementation goes here!
     const V* tmp = new V;  // Stub to make the project compile by default! You
                            // may remove this
