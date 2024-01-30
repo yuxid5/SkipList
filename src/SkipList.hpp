@@ -147,6 +147,21 @@ constexpr inline bool flipCoin(const std::string& key, size_t previousFlips) {
 template <typename K, typename V>
 class SkipList {
    private:
+        struct Node{
+            Node(K k, V v)
+            : key{k}, value{v}, next{nullptr}, up{nullptr}, down{nullptr}
+            {}
+            K key;
+            V value;
+            Node * next;
+            Node * up;
+            Node * down;
+        };
+        Node* top;
+        Node* base;
+        size_t keys;
+        size_t layers;
+        size_t height;
     // private variables go here.
 
    public:
@@ -228,7 +243,9 @@ class SkipList {
 };
 
 template <typename K, typename V>
-SkipList<K, V>::SkipList() {
+SkipList<K, V>::SkipList()
+    :base{nullptr}, top{nullptr}, keys{0}, layers{2}, height{1}
+{
     // TODO - your implementation goes here!
 }
 
@@ -240,19 +257,19 @@ SkipList<K, V>::~SkipList() {
 template <typename K, typename V>
 size_t SkipList<K, V>::size() const noexcept {
     // TODO - your implementation goes here!
-    return {};
+    return keys;
 }
 
 template <typename K, typename V>
 bool SkipList<K, V>::empty() const noexcept {
     // TODO - your implementation goes here!
-    return {};
+    return base == nullptr;
 }
 
 template <typename K, typename V>
 size_t SkipList<K, V>::layers() const noexcept {
     // TODO - your implementation goes here!
-    return {};
+    return layers;
 }
 
 template <typename K, typename V>
@@ -264,13 +281,30 @@ size_t SkipList<K, V>::height(const K& key) const {
 template <typename K, typename V>
 const K& SkipList<K, V>::nextKey(const K& key) const {
     // TODO - your implementation goes here!
-    return {};
+    Node * temp = base;
+    while (temp->next != nullptr && temp->next->key <= key){
+        temp = temp->next;
+    }
+    if (temp->next != nullptr){
+        return temp->next->key;
+    }
+    else{
+        throw std::out_of_range("Error");
+    }
 }
 
 template <typename K, typename V>
 const K& SkipList<K, V>::previousKey(const K& key) const {
     // TODO - your implementation goes here!
-    return {};
+
+    Node * temp = base;
+    while (temp->next != nullptr && temp->next->key < key){
+        temp = temp->next;
+    }
+    if (temp == base){
+        throw std::out_of_range("Error");
+    }
+    return temp->next;
 }
 
 template <typename K, typename V>
