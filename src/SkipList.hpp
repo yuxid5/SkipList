@@ -157,11 +157,10 @@ class SkipList {
             Node * up;
             Node * down;
         };
-        Node* top;
-        Node* base;
+        Node* head;
         size_t keys;
-        size_t layers;
-        size_t height;
+        size_t layer_count;
+        size_t layer_height;
     // private variables go here.
 
    public:
@@ -244,7 +243,7 @@ class SkipList {
 
 template <typename K, typename V>
 SkipList<K, V>::SkipList()
-    :base{nullptr}, top{nullptr}, keys{0}, layers{2}, height{1}
+    :head{nullptr}, keys{0}, layer_count{2}, layer_height{1}
 {
     // TODO - your implementation goes here!
 }
@@ -263,13 +262,13 @@ size_t SkipList<K, V>::size() const noexcept {
 template <typename K, typename V>
 bool SkipList<K, V>::empty() const noexcept {
     // TODO - your implementation goes here!
-    return base == nullptr;
+    return head == nullptr;
 }
 
 template <typename K, typename V>
 size_t SkipList<K, V>::layers() const noexcept {
     // TODO - your implementation goes here!
-    return layers;
+    return layer_count;
 }
 
 template <typename K, typename V>
@@ -281,7 +280,7 @@ size_t SkipList<K, V>::height(const K& key) const {
 template <typename K, typename V>
 const K& SkipList<K, V>::nextKey(const K& key) const {
     // TODO - your implementation goes here!
-    Node * temp = base;
+    Node * temp = head;
     while (temp->next != nullptr && temp->next->key <= key){
         temp = temp->next;
     }
@@ -297,29 +296,46 @@ template <typename K, typename V>
 const K& SkipList<K, V>::previousKey(const K& key) const {
     // TODO - your implementation goes here!
 
-    Node * temp = base;
+    Node * temp = head;
     while (temp->next != nullptr && temp->next->key < key){
         temp = temp->next;
     }
-    if (temp == base){
+    if (temp == head){
         throw std::out_of_range("Error");
     }
-    return temp->next;
+    return temp->key;
 }
 
 template <typename K, typename V>
 const V& SkipList<K, V>::find(const K& key) const {
     // TODO - your implementation goes here!
-    const V* tmp = new V;  // Stub to make the project compile by default! You
-                           // may remove this
-    return *tmp;
+    Node* temp = head;
+    while (temp != nullptr){
+        while (temp->next != nullptr && temp->next->key <= key){
+            temp = temp->next;
+        }
+        if(temp->key == key){
+            return temp->value;
+        }
+        temp = temp->down;
+    }
+    throw std::out_of_range("out of range");
 }
 
 template <typename K, typename V>
 V& SkipList<K, V>::find(const K& key) {
     // TODO - your implementation goes here!
-    auto* tmp_value = new V;  // Stub to make the project compile by default!
-    return *tmp_value;
+    Node* temp = head;
+    while (temp != nullptr){
+        while (temp->next != nullptr && temp->next->key <= key){
+            temp = temp->next;
+        }
+        if(temp->key == key){
+            return temp->value;
+        }
+        temp = temp->down;
+    }
+    throw std::out_of_range("out of range");
 }
 
 template <typename K, typename V>
