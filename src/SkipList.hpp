@@ -347,13 +347,18 @@ V& SkipList<K, V>::find(const K& key) {
     // TODO - your implementation goes here!
     Node* temp = head;
     while (temp != nullptr){
-        while (temp->next != nullptr && temp->next->key <= key){
+        while (temp->next != nullptr && temp ->next->key < key){
             temp = temp->next;
         }
-        if(temp->key == key){
-            return temp->value;
+        if(temp->next != nullptr && temp->next->key == key){
+            return temp->next->value;
         }
-        temp = temp->down;
+        if(temp -> down != nullptr){
+            temp = temp->down;
+        }
+        else{
+            break;
+        }
     }
     throw std::out_of_range("out of range");
 }

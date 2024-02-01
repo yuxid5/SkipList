@@ -36,21 +36,21 @@ TEST_CASE("SkipList:SimpleHeightsTest:ExpectEqualsPrecalulatedHeights",
     REQUIRE(heights == EXPECTED_HEIGHTS);
 }
 
-// TEST_CASE("SkipList:SimpleFindTest:ExpectValueInsertedEqualsValueFound",
-//           "[Sample][SkipList][InsertFind]") {
-//     const unsigned int NUMBER_OF_ELEMENTS = 10;
-//     const unsigned int VALUE_OFFSET = 100;
+TEST_CASE("SkipList:SimpleFindTest:ExpectValueInsertedEqualsValueFound",
+          "[Sample][SkipList][InsertFind]") {
+    const unsigned int NUMBER_OF_ELEMENTS = 10;
+    const unsigned int VALUE_OFFSET = 100;
 
-//     proj2::SkipList<unsigned, unsigned> skipList;
+    proj2::SkipList<unsigned, unsigned> skipList;
 
-//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-//         skipList.insert(i, (VALUE_OFFSET + i));
-//     }
+    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+        skipList.insert(i, (VALUE_OFFSET + i));
+    }
 
-//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-//         REQUIRE((i + VALUE_OFFSET) == skipList.find(i));
-//     }
-// }
+    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+        REQUIRE((i + VALUE_OFFSET) == skipList.find(i));
+    }
+}
 
 // TEST_CASE("SkipList:SimpleLargestAndSmallest:ExpectIsSmallestAndIsLargestTrue",
 //           "[Sample][SkipList][LargestSmallest]") {
