@@ -312,7 +312,7 @@ const K& SkipList<K, V>::nextKey(const K& key) const {
     while (temp->next != nullptr && temp->next->key <= key){
         temp = temp->next;
     }
-    if (temp->next != nullptr){
+    if (temp->next != nullptr && temp->key == key){
         return temp->next->key;
     }
     else{
@@ -328,13 +328,17 @@ const K& SkipList<K, V>::previousKey(const K& key) const {
     while (temp->down != nullptr){
         temp = temp->down;
     }
+    Node*newhead = temp;
     while (temp->next != nullptr && temp->next->key < key){
         temp = temp->next;
     }
-    if (temp == head){
+    if (temp == newhead){
         throw std::out_of_range("Error");
     }
-    return temp->key;
+    if(temp->next->key == key){
+        return temp->key;
+    }
+    throw std::out_of_range("Error");
 }
 
 template <typename K, typename V>
@@ -390,7 +394,7 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
     size_t current_layer = 0;
     // find base layer
     while(temp != nullptr){
-        while (temp->next != nullptr && temp->next->key <= key){
+        while (temp->next != nullptr && temp->next->key < key){
             temp = temp->next;
         }
         if(temp -> down != nullptr){
@@ -402,6 +406,7 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
     }
     // add element in the base layer
     if (temp->next != nullptr && temp->next->key == key){
+        delete newNode;
         return false;
     }
     newNode -> next = temp -> next;
@@ -437,7 +442,7 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
         Node* newtemp = head;
         while(temp_total > current_layer){
             newtemp = newtemp->down;
-            while (newtemp->next != nullptr && newtemp->next->key <= key){
+            while (newtemp->next != nullptr && newtemp->next->key < key){
                 newtemp = newtemp->next;
             }
             temp_total--;
