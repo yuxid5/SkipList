@@ -130,4 +130,22 @@ TEST_CASE("SkipList:LayersTest:Expect16", "[Sample][SkipList][Layers]") {
     REQUIRE(skipList.layers() == 16);
 }
 
+TEST_CASE("Large114514Test_withvalue1919810",
+          "[Large][SkipList][LargestSmallest]") {
+    const unsigned int NUMBER_OF_ELEMENTS = 114514;
+    const unsigned int VALUE_OFFSET = 1805296;
+
+    proj2::SkipList<unsigned, unsigned> skipList;
+
+    for (unsigned i = 1; i <= NUMBER_OF_ELEMENTS; i++) {
+        skipList.insert(i, (VALUE_OFFSET + i));
+    }
+
+    REQUIRE(skipList.isSmallestKey(1));
+    REQUIRE(skipList.isLargestKey(114514));
+    REQUIRE(skipList.find(114514) == 1919810);
+    REQUIRE_FALSE(skipList.isLargestKey(114515));
+    REQUIRE_FALSE(skipList.isSmallestKey(0));
+}
+
 }  // namespace

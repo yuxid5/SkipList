@@ -501,7 +501,7 @@ bool SkipList<K, V>::isLargestKey(const K& key) const {
     while (temp->next != nullptr && temp->next->key < key){
         temp = temp->next;
     }
-    if(temp->next->next == nullptr && temp->next->key == key){
+    if(temp->next != nullptr && temp->next->next == nullptr && temp->next->key == key){
         return true;
     }
     return false;
