@@ -250,6 +250,17 @@ SkipList<K, V>::SkipList()
 template <typename K, typename V>
 SkipList<K, V>::~SkipList() {
     // TODO - your implementation goes here!
+    Node *currentLevel = head;
+    while (currentLevel != nullptr) {
+        Node *nextLevel = currentLevel->down;
+        Node *temp = currentLevel;
+        while (temp != nullptr) {
+            Node *nextNode = temp->next;
+            delete temp;
+            temp = nextNode;
+        }
+        currentLevel = nextLevel; 
+    }
 }
 
 template <typename K, typename V>
