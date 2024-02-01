@@ -418,10 +418,10 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
         size_t temp_total = layer_count;
         Node* newtemp = head;
         while(temp_total > current_layer){
+            newtemp = newtemp->down;
             while (newtemp->next != nullptr && newtemp->next->key <= key){
                 newtemp = newtemp->next;
             }
-            newtemp = newtemp->down;
             temp_total--;
         }
         if(newtemp->next == nullptr){
