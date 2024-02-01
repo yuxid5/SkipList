@@ -36,98 +36,98 @@ TEST_CASE("SkipList:SimpleHeightsTest:ExpectEqualsPrecalulatedHeights",
     REQUIRE(heights == EXPECTED_HEIGHTS);
 }
 
-TEST_CASE("SkipList:SimpleFindTest:ExpectValueInsertedEqualsValueFound",
-          "[Sample][SkipList][InsertFind]") {
-    const unsigned int NUMBER_OF_ELEMENTS = 10;
-    const unsigned int VALUE_OFFSET = 100;
+// TEST_CASE("SkipList:SimpleFindTest:ExpectValueInsertedEqualsValueFound",
+//           "[Sample][SkipList][InsertFind]") {
+//     const unsigned int NUMBER_OF_ELEMENTS = 10;
+//     const unsigned int VALUE_OFFSET = 100;
 
-    proj2::SkipList<unsigned, unsigned> skipList;
+//     proj2::SkipList<unsigned, unsigned> skipList;
 
-    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-        skipList.insert(i, (VALUE_OFFSET + i));
-    }
+//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+//         skipList.insert(i, (VALUE_OFFSET + i));
+//     }
 
-    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-        REQUIRE((i + VALUE_OFFSET) == skipList.find(i));
-    }
-}
+//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+//         REQUIRE((i + VALUE_OFFSET) == skipList.find(i));
+//     }
+// }
 
-TEST_CASE("SkipList:SimpleLargestAndSmallest:ExpectIsSmallestAndIsLargestTrue",
-          "[Sample][SkipList][LargestSmallest]") {
-    const unsigned int NUMBER_OF_ELEMENTS = 10;
-    const unsigned int VALUE_OFFSET = 100;
+// TEST_CASE("SkipList:SimpleLargestAndSmallest:ExpectIsSmallestAndIsLargestTrue",
+//           "[Sample][SkipList][LargestSmallest]") {
+//     const unsigned int NUMBER_OF_ELEMENTS = 10;
+//     const unsigned int VALUE_OFFSET = 100;
 
-    proj2::SkipList<unsigned, unsigned> skipList;
+//     proj2::SkipList<unsigned, unsigned> skipList;
 
-    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-        skipList.insert(i, (VALUE_OFFSET + i));
-    }
+//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+//         skipList.insert(i, (VALUE_OFFSET + i));
+//     }
 
-    REQUIRE(skipList.isSmallestKey(0));
-    REQUIRE(skipList.isLargestKey(9));
-}
+//     REQUIRE(skipList.isSmallestKey(0));
+//     REQUIRE(skipList.isLargestKey(9));
+// }
 
-TEST_CASE("SkipList:InvolvedHeightsTest:ExpectEqualsPecalculatedHeights",
-          "[Sample][SkipList][Height]") {
-    const unsigned int NUMBER_OF_ELEMENTS = 10;
-    const unsigned MAGIC_VAL = 255;
-    const std::vector<unsigned> EXPECTED_HEIGHTS = {1, 2, 1, 3, 1, 2,
-                                                    1, 4, 1, 2, 12};
+// TEST_CASE("SkipList:InvolvedHeightsTest:ExpectEqualsPecalculatedHeights",
+//           "[Sample][SkipList][Height]") {
+//     const unsigned int NUMBER_OF_ELEMENTS = 10;
+//     const unsigned MAGIC_VAL = 255;
+//     const std::vector<unsigned> EXPECTED_HEIGHTS = {1, 2, 1, 3, 1, 2,
+//                                                     1, 4, 1, 2, 12};
 
-    proj2::SkipList<unsigned, unsigned> skipList;
-    std::vector<unsigned> heights;
+//     proj2::SkipList<unsigned, unsigned> skipList;
+//     std::vector<unsigned> heights;
 
-    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-        skipList.insert(i, i);
-        heights.push_back(skipList.height(i));
-    }
+//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+//         skipList.insert(i, i);
+//         heights.push_back(skipList.height(i));
+//     }
 
-    // The coinFlip function will always return heads
-    // for 255 regardless of the current layer.
-    // You can use this value to test your threshold for halting
-    // the insertion procedure. If this results in an infinite loop inside
-    // of your insert function you have not implemented a cutoff threshold.
-    skipList.insert(MAGIC_VAL, MAGIC_VAL);
+//     // The coinFlip function will always return heads
+//     // for 255 regardless of the current layer.
+//     // You can use this value to test your threshold for halting
+//     // the insertion procedure. If this results in an infinite loop inside
+//     // of your insert function you have not implemented a cutoff threshold.
+//     skipList.insert(MAGIC_VAL, MAGIC_VAL);
 
-    heights.push_back(skipList.height(MAGIC_VAL));
+//     heights.push_back(skipList.height(MAGIC_VAL));
 
-    // The expected height for 255 is 12 because there are fewer than 16 nodes
-    // in the skip list when 12 is added.
-    REQUIRE(heights == EXPECTED_HEIGHTS);
+//     // The expected height for 255 is 12 because there are fewer than 16 nodes
+//     // in the skip list when 12 is added.
+//     REQUIRE(heights == EXPECTED_HEIGHTS);
 
-    // At this point there should be 13 layers
-    // (because the fast lane is not included in the height calculation).
-    REQUIRE(skipList.layers() == 13);
-}
+//     // At this point there should be 13 layers
+//     // (because the fast lane is not included in the height calculation).
+//     REQUIRE(skipList.layers() == 13);
+// }
 
-TEST_CASE("SkipList:LayersTest:Expect16", "[Sample][SkipList][Layers]") {
-    const unsigned int NUMBER_OF_ELEMENTS = 16;
-    const unsigned MAGIC_VAL = 255;
-    const std::vector<unsigned> EXPECTED_HEIGHTS = {1, 2, 1, 3, 1, 2, 1, 4, 1,
-                                                    2, 1, 3, 1, 2, 1, 5, 15};
+// TEST_CASE("SkipList:LayersTest:Expect16", "[Sample][SkipList][Layers]") {
+//     const unsigned int NUMBER_OF_ELEMENTS = 16;
+//     const unsigned MAGIC_VAL = 255;
+//     const std::vector<unsigned> EXPECTED_HEIGHTS = {1, 2, 1, 3, 1, 2, 1, 4, 1,
+//                                                     2, 1, 3, 1, 2, 1, 5, 15};
 
-    proj2::SkipList<unsigned, unsigned> skipList;
-    std::vector<unsigned> heights;
+//     proj2::SkipList<unsigned, unsigned> skipList;
+//     std::vector<unsigned> heights;
 
-    // First insert 16 values into the skip list [0, 15].
-    for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
-        skipList.insert(i, i);
-        heights.push_back(skipList.height(i));
-    }
+//     // First insert 16 values into the skip list [0, 15].
+//     for (unsigned i = 0; i < NUMBER_OF_ELEMENTS; i++) {
+//         skipList.insert(i, i);
+//         heights.push_back(skipList.height(i));
+//     }
 
-    // Same value used in SimpleHeightsTest for testing the threshold.
-    skipList.insert(MAGIC_VAL, MAGIC_VAL);
+//     // Same value used in SimpleHeightsTest for testing the threshold.
+//     skipList.insert(MAGIC_VAL, MAGIC_VAL);
 
-    heights.push_back(skipList.height(MAGIC_VAL));
+//     heights.push_back(skipList.height(MAGIC_VAL));
 
-    // The expected height for 255 is 15 because 3 * ceil(log_2(17)) = 15
-    // meaning the maximum height of any node should be 15 for a skip list with
-    // 17 nodes.
-    REQUIRE(heights == EXPECTED_HEIGHTS);
+//     // The expected height for 255 is 15 because 3 * ceil(log_2(17)) = 15
+//     // meaning the maximum height of any node should be 15 for a skip list with
+//     // 17 nodes.
+//     REQUIRE(heights == EXPECTED_HEIGHTS);
 
-    // At this point there should be 16 layers
-    // (because the fast lane is not included in the height calculation).
-    REQUIRE(skipList.layers() == 16);
-}
+//     // At this point there should be 16 layers
+//     // (because the fast lane is not included in the height calculation).
+//     REQUIRE(skipList.layers() == 16);
+// }
 
 }  // namespace

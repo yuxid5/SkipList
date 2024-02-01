@@ -148,8 +148,8 @@ template <typename K, typename V>
 class SkipList {
    private:
         struct Node{
-            Node(K k, V v)
-            : key{k}, value{v}, next{nullptr}, down{nullptr}
+            Node(K k, V v, Node* next = nullptr, Node* down = nullptr)
+            : key{k}, value{v}, next{next}, down{down}
             {}
             K key;
             V value;
@@ -242,7 +242,7 @@ class SkipList {
 
 template <typename K, typename V>
 SkipList<K, V>::SkipList()
-    :head{K(), V()}, keys{0}, layer_count{2}, layer_height{1}
+    :head{new Node(K(), V(), nullptr, new Node(K(),V()))}, keys{0}, layer_count{2}, layer_height{1}
 {
     // TODO - your implementation goes here!
 }
@@ -261,7 +261,7 @@ size_t SkipList<K, V>::size() const noexcept {
 template <typename K, typename V>
 bool SkipList<K, V>::empty() const noexcept {
     // TODO - your implementation goes here!
-    return head == nullptr;
+    return head->next == nullptr;
 }
 
 template <typename K, typename V>
@@ -272,15 +272,30 @@ size_t SkipList<K, V>::layers() const noexcept {
 
 template <typename K, typename V>
 size_t SkipList<K, V>::height(const K& key) const {
-    // TODO - your implementation goes here!
-    return {};
+    //TODO - your implementation goes here!
+    Node* temp = head;
+    size_t height_count = layer_count - 1;
+    while (temp != nullptr){
+        temp = temp->down;
+        while (temp->next != nullptr && temp->next->key <= key){
+            temp = temp->next;
+        }
+        if(temp->key == key){
+            return height_count;
+        }
+        if(temp->down == nullptr){
+            break;
+        }
+        height_count--;
+    }
+    throw std::out_of_range("error");
 }
 
 template <typename K, typename V>
 const K& SkipList<K, V>::nextKey(const K& key) const {
     // TODO - your implementation goes here!
     Node * temp = head;
-    for (int i = layer_count; i >0; i--){
+    while (temp->down != nullptr){
         temp = temp->down;
     }
     while (temp->next != nullptr && temp->next->key <= key){
@@ -299,7 +314,7 @@ const K& SkipList<K, V>::previousKey(const K& key) const {
     // TODO - your implementation goes here!
 
     Node * temp = head;
-    for (int i = layer_count; i >0; i--){
+    while (temp->down != nullptr){
         temp = temp->down;
     }
     while (temp->next != nullptr && temp->next->key < key){
@@ -351,25 +366,31 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
     Node* tracker = nullptr;
     size_t max_layer = 0;
     size_t flip_time = 0;
-    size_t current_layer = -1;
+    size_t current_layer = 0;
     // find base layer
-    while(temp->down != nullptr){
+    while(temp != nullptr){
         while (temp->next != nullptr && temp->next->key <= key){
             temp = temp->next;
         }
-        temp = temp->down;
+        if(temp -> down != nullptr){
+            temp = temp->down;
+        }
+        else{
+            break;
+        }
     }
     // add element in the base layer
-    if (temp->key = key){
+    if (temp->next != nullptr && temp->next->key == key){
         return false;
     }
-    tracker = temp;
     newNode -> next = temp -> next;
     temp->next = newNode;
     keys++;
+    tracker = newNode;
+    current_layer++;
 
     // count how many times added
-    while flipCoin(key,flip_time){
+    while (flipCoin(key,flip_time)){
         flip_time += 1;
     }
     //find max layer
@@ -380,59 +401,67 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
         max_layer = 3 * ceil(log2(keys)) + 1;
     }
     // add from base layer
-    while (current_layer <= flip_time){
-        current_layer += 1;
+    while (flip_time > 0){
         // add new layer when add to up exceed the total layer.
+        current_layer += 1;
         if(current_layer >= layer_count && current_layer < max_layer){
             layer_count += 1;
             Node* newlayer = new Node(K(), V());
-            head->next = newNode;
-            head->next->down = newNode;
-            head->next->next = nullptr;
-            newlayer->down = head;
+            newlayer -> down = head;
+            // head->next = newNode;
+            // head->next->down = newNode;
+            // head->next->next = nullptr;
+            // newlayer->down = head;
             head = newlayer;
-            return true;
         }
         // add to upper layer
         size_t temp_total = layer_count;
         Node* newtemp = head;
-        while(temp_total >= current_layer+1){
+        while(temp_total > current_layer){
             while (newtemp->next != nullptr && newtemp->next->key <= key){
                 newtemp = newtemp->next;
             }
             newtemp = newtemp->down;
+            temp_total--;
         }
-        newNode->down = newNode;
-        newNode->next = newtemp->next;
-        newtemp->next = newNode;
-        return true;
+        if(newtemp->next == nullptr){
+            Node* uppernode = new Node(key, value, nullptr, tracker);
+            newtemp->next = uppernode;
+            tracker = uppernode;
+        }
+        else{
+            Node* uppernode = new Node(key, value, newtemp->next, tracker);
+            newtemp->next = uppernode;
+            tracker = uppernode;
+        }
+
+        flip_time--;
     }
-
-    return false;
+    return true;
 }
 
-template <typename K, typename V>
-std::vector<K> SkipList<K, V>::allKeysInOrder() const {
-    // TODO - your implementation goes here!
-    return {};
-}
+// template <typename K, typename V>
+// std::vector<K> SkipList<K, V>::allKeysInOrder() const {
+//     // TODO - your implementation goes here!
+//     return {};
+// }
 
-template <typename K, typename V>
-bool SkipList<K, V>::isSmallestKey(const K& key) const {
-    // TODO - your implementation goes here!
-    return {};
-}
+// template <typename K, typename V>
+// bool SkipList<K, V>::isSmallestKey(const K& key) const {
+//     // TODO - your implementation goes here!
+//     return {};
+// }
 
-template <typename K, typename V>
-bool SkipList<K, V>::isLargestKey(const K& key) const {
-    // TODO - your implementation goes here!
-    return {};
-}
+// template <typename K, typename V>
+// bool SkipList<K, V>::isLargestKey(const K& key) const {
+//     // TODO - your implementation goes here!
+//     return {};
+// }
 
-template <typename K, typename V>
-void SkipList<K, V>::erase(const K& key) {
-    // TODO -
-}
+// template <typename K, typename V>
+// void SkipList<K, V>::erase(const K& key) {
+//     // TODO -
+// }
 
 }  // namespace shindler::ics46::project2
 #endif
