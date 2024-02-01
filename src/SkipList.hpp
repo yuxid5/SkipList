@@ -149,12 +149,11 @@ class SkipList {
    private:
         struct Node{
             Node(K k, V v)
-            : key{k}, value{v}, next{nullptr}, up{nullptr}, down{nullptr}
+            : key{k}, value{v}, next{nullptr}, down{nullptr}
             {}
             K key;
             V value;
             Node * next;
-            Node * up;
             Node * down;
         };
         Node* head;
@@ -243,7 +242,7 @@ class SkipList {
 
 template <typename K, typename V>
 SkipList<K, V>::SkipList()
-    :head{nullptr}, keys{0}, layer_count{2}, layer_height{1}
+    :head{K(), V()}, keys{0}, layer_count{2}, layer_height{1}
 {
     // TODO - your implementation goes here!
 }
@@ -281,6 +280,9 @@ template <typename K, typename V>
 const K& SkipList<K, V>::nextKey(const K& key) const {
     // TODO - your implementation goes here!
     Node * temp = head;
+    for (int i = layer_count; i >0; i--){
+        temp = temp->down;
+    }
     while (temp->next != nullptr && temp->next->key <= key){
         temp = temp->next;
     }
@@ -297,6 +299,9 @@ const K& SkipList<K, V>::previousKey(const K& key) const {
     // TODO - your implementation goes here!
 
     Node * temp = head;
+    for (int i = layer_count; i >0; i--){
+        temp = temp->down;
+    }
     while (temp->next != nullptr && temp->next->key < key){
         temp = temp->next;
     }
@@ -341,7 +346,69 @@ V& SkipList<K, V>::find(const K& key) {
 template <typename K, typename V>
 bool SkipList<K, V>::insert(const K& key, const V& value) {
     // TODO - your implementation goes here!
-    return {};
+    Node* temp = head;
+    Node* newNode = new Node(key, value);
+    Node* tracker = nullptr;
+    size_t max_layer = 0;
+    size_t flip_time = 0;
+    size_t current_layer = -1;
+    // find base layer
+    while(temp->down != nullptr){
+        while (temp->next != nullptr && temp->next->key <= key){
+            temp = temp->next;
+        }
+        temp = temp->down;
+    }
+    // add element in the base layer
+    if (temp->key = key){
+        return false;
+    }
+    tracker = temp;
+    newNode -> next = temp -> next;
+    temp->next = newNode;
+    keys++;
+
+    // count how many times added
+    while flipCoin(key,flip_time){
+        flip_time += 1;
+    }
+    //find max layer
+    if(keys <= 16){
+        max_layer = 13;
+    }
+    else{
+        max_layer = 3 * ceil(log2(keys)) + 1;
+    }
+    // add from base layer
+    while (current_layer <= flip_time){
+        current_layer += 1;
+        // add new layer when add to up exceed the total layer.
+        if(current_layer >= layer_count && current_layer < max_layer){
+            layer_count += 1;
+            Node* newlayer = new Node(K(), V());
+            head->next = newNode;
+            head->next->down = newNode;
+            head->next->next = nullptr;
+            newlayer->down = head;
+            head = newlayer;
+            return true;
+        }
+        // add to upper layer
+        size_t temp_total = layer_count;
+        Node* newtemp = head;
+        while(temp_total >= current_layer+1){
+            while (newtemp->next != nullptr && newtemp->next->key <= key){
+                newtemp = newtemp->next;
+            }
+            newtemp = newtemp->down;
+        }
+        newNode->down = newNode;
+        newNode->next = newtemp->next;
+        newtemp->next = newNode;
+        return true;
+    }
+
+    return false;
 }
 
 template <typename K, typename V>
