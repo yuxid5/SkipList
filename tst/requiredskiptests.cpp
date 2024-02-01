@@ -84,19 +84,19 @@ TEST_CASE("SkipList:SimpleAllKeysInOrder:ExpectInOrderList",
     REQUIRE(expected == skipList.allKeysInOrder());
 }
 
-// TEST_CASE("SkipList:EraseOnEmptyThrows", "[Required][SkipList]") {
-//   proj2::SkipList<unsigned, unsigned> skipList;
-//   REQUIRE_THROWS(skipList.erase(0));
-// }
+TEST_CASE("SkipList:EraseOnEmptyThrows", "[Required][SkipList]") {
+  proj2::SkipList<unsigned, unsigned> skipList;
+  REQUIRE_THROWS(skipList.erase(0));
+}
 
-// TEST_CASE("SkipList:EraseKey", "[Required][SkipList]") {
-//   proj2::SkipList<unsigned, unsigned> skipList;
-//   skipList.insert(0, 0);
-//   REQUIRE(skipList.size() == 1);
-//   REQUIRE(skipList.find(0) == 0);
-//   skipList.erase(0);
-//   REQUIRE(skipList.empty());
-//   REQUIRE_THROWS(skipList.find(0));
-// }
+TEST_CASE("SkipList:EraseKey", "[Required][SkipList]") {
+  proj2::SkipList<unsigned, unsigned> skipList;
+  skipList.insert(0, 0);
+  REQUIRE(skipList.size() == 1);
+  REQUIRE(skipList.find(0) == 0);
+  skipList.erase(0);
+  REQUIRE(skipList.empty());
+  REQUIRE_THROWS(skipList.find(0));
+}
 
 }  // namespace

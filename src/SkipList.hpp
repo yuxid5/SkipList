@@ -491,10 +491,30 @@ bool SkipList<K, V>::isLargestKey(const K& key) const {
     return false;
 }
 
-// template <typename K, typename V>
-// void SkipList<K, V>::erase(const K& key) {
-//     // TODO -
-// }
+template <typename K, typename V>
+void SkipList<K, V>::erase(const K& key) {
+    // TODO -
+    Node*temp = head;
+    bool found = false;
+    while (temp != nullptr){
+        while (temp->next != nullptr && temp->next->key < key){
+            temp = temp->next;
+        }
+        if (temp->next != nullptr && temp->next->key == key){
+            found = true;
+            Node* deleteNode = temp->next;
+            temp->next = deleteNode->next;
+            delete deleteNode;
+        }
+        temp = temp->down;
+    }
+    if (found){
+        keys--;
+    }
+    else{
+        throw std::out_of_range("no such key in that skip list");
+    }
+}
 
 }  // namespace shindler::ics46::project2
 #endif
