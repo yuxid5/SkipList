@@ -261,7 +261,7 @@ size_t SkipList<K, V>::size() const noexcept {
 template <typename K, typename V>
 bool SkipList<K, V>::empty() const noexcept {
     // TODO - your implementation goes here!
-    return head->next == nullptr;
+    return head->down->next == nullptr;
 }
 
 template <typename K, typename V>
@@ -331,13 +331,18 @@ const V& SkipList<K, V>::find(const K& key) const {
     // TODO - your implementation goes here!
     Node* temp = head;
     while (temp != nullptr){
-        while (temp->next != nullptr && temp->next->key <= key){
+        while (temp->next != nullptr && temp ->next->key < key){
             temp = temp->next;
         }
-        if(temp->key == key){
-            return temp->value;
+        if(temp->next != nullptr && temp->next->key == key){
+            return temp->next->value;
         }
-        temp = temp->down;
+        if(temp -> down != nullptr){
+            temp = temp->down;
+        }
+        else{
+            break;
+        }
     }
     throw std::out_of_range("out of range");
 }
@@ -394,16 +399,17 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
     tracker = newNode;
     current_layer++;
 
-    // count how many times added
-    while (flipCoin(key,flip_time)){
-        flip_time += 1;
-    }
     //find max layer
     if(keys <= 16){
         max_layer = 13;
     }
     else{
         max_layer = 3 * ceil(log2(keys)) + 1;
+    }
+
+    // count how many times added
+    while (flipCoin(key,flip_time) && flip_time + 2 < max_layer){
+        flip_time += 1;
     }
     // add from base layer
     while (flip_time > 0){
@@ -413,10 +419,6 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
             layer_count += 1;
             Node* newlayer = new Node(K(), V());
             newlayer -> down = head;
-            // head->next = newNode;
-            // head->next->down = newNode;
-            // head->next->next = nullptr;
-            // newlayer->down = head;
             head = newlayer;
         }
         // add to upper layer
@@ -445,23 +447,49 @@ bool SkipList<K, V>::insert(const K& key, const V& value) {
     return true;
 }
 
-// template <typename K, typename V>
-// std::vector<K> SkipList<K, V>::allKeysInOrder() const {
-//     // TODO - your implementation goes here!
-//     return {};
-// }
+template <typename K, typename V>
+std::vector<K> SkipList<K, V>::allKeysInOrder() const {
+    // TODO - your implementation goes here!
+    std::vector<K> ordered_key;
+    Node * temp = head;
+    while (temp->down != nullptr){
+        temp = temp->down;
+    }
+    while (temp->next != nullptr){
+        ordered_key.push_back(temp->next->key);
+        temp = temp->next;
+    }
+    return ordered_key;
+}
 
-// template <typename K, typename V>
-// bool SkipList<K, V>::isSmallestKey(const K& key) const {
-//     // TODO - your implementation goes here!
-//     return {};
-// }
+template <typename K, typename V>
+bool SkipList<K, V>::isSmallestKey(const K& key) const {
+    // TODO - your implementation goes here!
+    Node * temp = head;
+    while (temp->down != nullptr){
+        temp = temp->down;
+    }
+    if (temp->next != nullptr && temp->next->key == key){
+        return true;
+    }
+    return false;
+}
 
-// template <typename K, typename V>
-// bool SkipList<K, V>::isLargestKey(const K& key) const {
-//     // TODO - your implementation goes here!
-//     return {};
-// }
+template <typename K, typename V>
+bool SkipList<K, V>::isLargestKey(const K& key) const {
+    // TODO - your implementation goes here!
+    Node * temp = head;
+    while (temp->down != nullptr){
+        temp = temp->down;
+    }
+    while (temp->next != nullptr && temp->next->key < key){
+        temp = temp->next;
+    }
+    if(temp->next->next == nullptr && temp->next->key == key){
+        return true;
+    }
+    return false;
+}
 
 // template <typename K, typename V>
 // void SkipList<K, V>::erase(const K& key) {
