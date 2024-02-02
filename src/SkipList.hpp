@@ -488,7 +488,7 @@ bool SkipList<K, V>::isSmallestKey(const K& key) const {
     if (temp->next != nullptr && temp->next->key == key){
         return true;
     }
-    return false;
+    throw std::out_of_range("out of range");
 }
 
 template <typename K, typename V>
@@ -504,7 +504,7 @@ bool SkipList<K, V>::isLargestKey(const K& key) const {
     if(temp->next != nullptr && temp->next->next == nullptr && temp->next->key == key){
         return true;
     }
-    return false;
+    throw std::out_of_range("out of range");
 }
 
 template <typename K, typename V>

@@ -144,8 +144,8 @@ TEST_CASE("Large114514Test_withvalue1919810",
     REQUIRE(skipList.isSmallestKey(1));
     REQUIRE(skipList.isLargestKey(114514));
     REQUIRE(skipList.find(114514) == 1919810);
-    REQUIRE_FALSE(skipList.isLargestKey(114515));
-    REQUIRE_FALSE(skipList.isSmallestKey(0));
+    REQUIRE_THROWS(skipList.isLargestKey(114515));
+    REQUIRE_THROWS(skipList.isSmallestKey(0));
 }
 
 }  // namespace
