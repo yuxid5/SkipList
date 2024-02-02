@@ -272,7 +272,7 @@ size_t SkipList<K, V>::size() const noexcept {
 template <typename K, typename V>
 bool SkipList<K, V>::empty() const noexcept {
     // TODO - your implementation goes here!
-    return head->down->next == nullptr;
+    return keys == 0;
 }
 
 template <typename K, typename V>
